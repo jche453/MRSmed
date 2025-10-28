@@ -1,4 +1,4 @@
-setwd("/projects/huels_lab/MRS/02-Mediation/02-Simulations/01-Simulation1/02-E_MRS_O/simu_pheno_1")
+setwd("/projects/huels_lab/MRS/02-Mediation/02-Simulations/01-Simulation1-0.8h2/01-E_MRS_O.E_O/simu_pheno_1")
 ### Load summary statistics, one for exposure EWAS and the other for outcome EWAS
 load("SS.rda")
 #SS_E denotes Exposure EWAS summary statistics
@@ -44,7 +44,11 @@ cpg = colnames(Betas_log2)
 cpg_causal = colnames(Betas_causal)
 beta = cbind(Betas_log2[,cpg[!(cpg%in%cpg_causal)]], Betas_causal)
 
-MRS_list = GenMRS_mediation(beta, SS_merge, Pthred, method = "ranking")
+#MRS_list = GenMRS_mediation(beta, SS_merge, Pthred, method = "Threshold")
+#MRS_list = GenMRS_mediation(beta, SS_merge, Pthred, method = "ranking")
+library(poolr)
+MRS_list = GenMRS_mediation(beta, SS_merge, Pthred, method = "meta")
+
 pvalueinfo = MRS_list$pvalueinfo
 MRS = MRS_list$MRS
 MRS$ID = sapply(strsplit(MRS$ID, "X"), "[", 2)
